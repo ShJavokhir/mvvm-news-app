@@ -1,7 +1,9 @@
 //started at 16:20 march 17 2021
 import 'package:flutter/material.dart';
 import 'package:mvvm_news_app/view/splash_screen.dart';
+import 'package:mvvm_news_app/view/top_headlines.dart';
 import 'package:mvvm_news_app/viewmodel/splash_screen_viewmodel.dart';
+import 'package:mvvm_news_app/viewmodel/top_headlines_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -18,14 +20,19 @@ class MyApp extends StatelessWidget {
             .appBarTheme
             .copyWith(brightness: Brightness.light),
       ),
-      initialRoute: "/",
+      initialRoute: "/topHeadlines",
       routes: {
-        "/": (context) {
+        // "/": (_) {
+        //   return ChangeNotifierProvider(
+        //     create: (_) => SplashScreenViewModel(),
+        //     child: SplashScreen(),
+        //   );
+        // },
+        "/topHeadlines": (_) {
           return ChangeNotifierProvider(
-            create: (_) => SplashScreenViewModel(),
-            child: SplashScreen(),
+            create: (_) => TopHeadlinesViewModel(),
+            child: TopHeadlines(),
           );
-          ;
         },
       },
     );
