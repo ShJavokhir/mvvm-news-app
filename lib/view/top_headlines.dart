@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mvvm_news_app/services/news_api_webservice.dart';
 
 class TopHeadlines extends StatefulWidget {
   TopHeadlines({Key key}) : super(key: key);
@@ -9,6 +10,12 @@ class TopHeadlines extends StatefulWidget {
 }
 
 class _TopHeadlinesState extends State<TopHeadlines> {
+  @override
+  void initState() {
+    NewsApiWebService().fetchTopHeadlines();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -29,15 +36,14 @@ class _TopHeadlinesState extends State<TopHeadlines> {
         getAppBar(),
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(0),
             child: CustomScrollView(
               slivers: [
                 SliverGrid(
                   gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 15),
+                    crossAxisCount: 2,
+                    childAspectRatio: 1,
+                  ),
                   delegate: new SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                       return newsCardView();
@@ -88,7 +94,7 @@ class _TopHeadlinesState extends State<TopHeadlines> {
     const width = 60.0;
     const height = 120.0;
     return Container(
-      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.all(10),
       width: width,
       height: height,
       decoration: BoxDecoration(
