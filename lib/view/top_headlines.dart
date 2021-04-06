@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mvvm_news_app/model/article.dart';
 import 'package:mvvm_news_app/services/news_api_webservice.dart';
+import 'package:mvvm_news_app/viewmodel/top_headlines_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class TopHeadlines extends StatefulWidget {
   TopHeadlines({Key key}) : super(key: key);
@@ -12,7 +15,12 @@ class TopHeadlines extends StatefulWidget {
 class _TopHeadlinesState extends State<TopHeadlines> {
   @override
   void initState() {
-    NewsApiWebService().fetchTopHeadlines();
+    //Future delayed zero is just for getting context. Bcz you know that we can not access context in initstate directly
+    Future.delayed(Duration.zero).then((_) {
+      Provider.of<TopHeadlinesViewModel>(context, listen: false)
+          .fetchTopHeadlines(context);
+    });
+    //NewsApiWebService().fetchTopHeadlines();
     super.initState();
   }
 
@@ -31,35 +39,37 @@ class _TopHeadlinesState extends State<TopHeadlines> {
   }
 
   Widget buildBody(BuildContext context) {
-    return Column(
-      children: [
-        getAppBar(),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.all(0),
-            child: CustomScrollView(
-              slivers: [
-                SliverGrid(
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1,
+    return Consumer<TopHeadlinesViewModel>(builder: (_, viewmodel, child) {
+      return Column(
+        children: [
+          _getAppBar(),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(0),
+              child: CustomScrollView(
+                slivers: [
+                  SliverGrid(
+                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.714,
+                    ),
+                    delegate: new SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return _newsCardView(viewmodel.articles[index]);
+                      },
+                      childCount: viewmodel.articles.length,
+                    ),
                   ),
-                  delegate: new SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return newsCardView();
-                    },
-                    childCount: 20,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
-  Widget getAppBar() {
+  Widget _getAppBar() {
     final Shader linearGradient = LinearGradient(
       colors: <Color>[
         Color.fromRGBO(255, 255, 255, 1),
@@ -90,14 +100,17 @@ class _TopHeadlinesState extends State<TopHeadlines> {
     );
   }
 
-  Widget newsCardView() {
-    const width = 60.0;
-    const height = 120.0;
+  Widget _newsCardView(Article article) {
     return Container(
       margin: EdgeInsets.all(10),
-      width: width,
-      height: height,
       decoration: BoxDecoration(
+        image: article.urlToImage != null
+            ? DecorationImage(
+                image: NetworkImage(
+                  article.urlToImage,
+                ),
+                fit: BoxFit.cover)
+            : null,
         borderRadius: BorderRadius.all(Radius.circular(32.0)),
         border: Border.all(color: Color.fromRGBO(55, 49, 103, 1)),
         boxShadow: [
@@ -106,6 +119,58 @@ class _TopHeadlinesState extends State<TopHeadlines> {
             offset: Offset(1.0, 5.0),
             blurRadius: 10.0,
           ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              SizedBox(height: 130),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(0, 0, 0, 0.5),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        article.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.account_circle_rounded,
+                              color: Colors.white),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: Text(
+                              article.author != null ? article.author : "none",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )
         ],
       ),
     );
