@@ -1,7 +1,10 @@
 //started at 16:20 march 17 2021
 import 'package:flutter/material.dart';
+import 'package:mvvm_news_app/model/article.dart';
+import 'package:mvvm_news_app/view/article_detail.dart';
 import 'package:mvvm_news_app/view/splash_screen.dart';
 import 'package:mvvm_news_app/view/top_headlines.dart';
+import 'package:mvvm_news_app/viewmodel/article_detail_viewmodel.dart';
 import 'package:mvvm_news_app/viewmodel/splash_screen_viewmodel.dart';
 import 'package:mvvm_news_app/viewmodel/top_headlines_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +35,14 @@ class MyApp extends StatelessWidget {
           return ChangeNotifierProvider(
             create: (_) => TopHeadlinesViewModel(),
             child: TopHeadlines(),
+          );
+        },
+        "/articleDetail": (
+          _,
+        ) {
+          return ChangeNotifierProvider(
+            create: (_) => ArticleDetailViewModel(),
+            child: ArticleDetail(),
           );
         },
       },

@@ -101,77 +101,85 @@ class _TopHeadlinesState extends State<TopHeadlines> {
   }
 
   Widget _newsCardView(Article article) {
-    return Container(
-      margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        image: article.urlToImage != null
-            ? DecorationImage(
-                image: NetworkImage(
-                  article.urlToImage,
-                ),
-                fit: BoxFit.cover)
-            : null,
-        borderRadius: BorderRadius.all(Radius.circular(32.0)),
-        border: Border.all(color: Color.fromRGBO(55, 49, 103, 1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            offset: Offset(1.0, 5.0),
-            blurRadius: 10.0,
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(height: 130),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(15),
-                  height: double.infinity,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(0, 0, 0, 0.5),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+    return GestureDetector(
+      onTap: () {
+        Provider.of<TopHeadlinesViewModel>(context, listen: false)
+            .openArticleDetailPage(context: context, articleToShow: article);
+      },
+      child: Container(
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          image: article.urlToImage != null
+              ? DecorationImage(
+                  image: NetworkImage(
+                    article.urlToImage,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        article.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.account_circle_rounded,
-                              color: Colors.white),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: Text(
-                              article.author != null ? article.author : "none",
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                              ),
+                  fit: BoxFit.cover)
+              : null,
+          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+          border: Border.all(color: Color.fromRGBO(55, 49, 103, 1)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(1.0, 5.0),
+              blurRadius: 10.0,
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                SizedBox(height: 130),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(15),
+                    height: double.infinity,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(0, 0, 0, 0.5),
+                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          article.title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          children: [
+                            Icon(Icons.account_circle_rounded,
+                                color: Colors.white),
+                            SizedBox(
+                              width: 5,
                             ),
-                          )
-                        ],
-                      )
-                    ],
+                            Expanded(
+                              child: Text(
+                                article.author != null
+                                    ? article.author
+                                    : "none",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
-          )
-        ],
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

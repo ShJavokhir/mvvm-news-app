@@ -14,4 +14,8 @@ class TopHeadlinesViewModel with ChangeNotifier {
       //TODO: show dialog about error
     }
   }
+
+  void openArticleDetailPage({BuildContext context, Article articleToShow}) {
+    Navigator.of(context).pushNamed("/articleDetail", arguments: articleToShow);
+  }
 }
